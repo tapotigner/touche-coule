@@ -15,21 +15,3 @@ int main (int argc, char **argv) {
 	}
 	return (0);
 }
-
-// #include <ncurses.h>
-
-// main()
-// {
-//         initscr();
-//         move(0,0);
-//         addch('0');
-//         move(1,0);
-//         addch('1');
-//         move(2,0);
-//         addch('2');
-//         //addstr("this is blink->");
-//         addch('H' | A_BLINK);
-//         refresh();
-//         getch();
-//         endwin();
-// }

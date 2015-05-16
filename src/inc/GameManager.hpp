@@ -49,14 +49,93 @@ public:
 		splashScreen();
 		init();
 		while (playing) {
-			placeBoats();
+			if (placeBoats()) {
+				fight();
+			}
 			closeGame();
 		}
 	}
 
 private:
 
-	void placeBoats() {
+	void fight() {
+		bool isFighting = true;
+		if (turn == TURN_P1) {
+			map1->changeCursor(Rect(1, 1, 1, 1));
+			map2->changeCursor(Rect(0, 0, 0, 0));
+		}
+		if (turn == TURN_P2) {
+			map1->changeCursor(Rect(0, 0, 0, 0));
+			map2->changeCursor(Rect(1, 1, 1, 1));
+		}
+		while (isFighting) {
+			// Get inputs
+			int input = getch();
+			// Manage inputs
+			switch (input) {
+				case CTRLC: // Ctrl + c
+				case ESCAPE: // Escape
+					closeGame();
+					isFighting = false;
+					return;
+				case DOWN: // DOWN
+					if (turn == TURN_P1)
+						map1->changeCursorPos(0, 1);
+					if (turn == TURN_P2)
+						map2->changeCursorPos(0, 1);
+					break;
+				case UP: // UP
+					if (turn == TURN_P1)
+						map1->changeCursorPos(0, -1);
+					if (turn == TURN_P2)
+						map2->changeCursorPos(0, -1);
+					break;
+				case LEFT: // LEFT
+					if (turn == TURN_P1)
+						map1->changeCursorPos(-1, 0);
+					if (turn == TURN_P2)
+						map2->changeCursorPos(-1, 0);
+					break;
+				case RIGHT: // RIGHT
+					if (turn == TURN_P1)
+						map1->changeCursorPos(1, 0);
+					if (turn == TURN_P2)
+						map2->changeCursorPos(1, 0);
+					break;
+				case SPACE: // SPACE
+					if (turn == TURN_P1)
+						map1->swapCursor();
+					if (turn == TURN_P2)
+						map2->swapCursor();
+					break;
+				case ENTER: // ENTER
+					// if (turn == TURN_P1) {
+					// 	if (map1->addBoat()) {
+					// 		currentBoat++;
+					// 		map1->changeCursor(Rect(1, 1, Map::BOATS_TEMPLATE[currentBoat], 1));
+					// 	}
+					// } else if (turn == TURN_P2) {
+					// 	if (map2->addBoat()) {
+					// 		currentBoat++;
+					// 		map2->changeCursor(Rect(1, 1, Map::BOATS_TEMPLATE[currentBoat], 1));
+					// 	}
+					// }
+					// if (currentBoat == Map::NB_BOATS) {
+					// 	isPlacingBoat = false;
+					// }
+					break;
+			}
+			if (playing) {
+				// Print the game
+				printMaps();
+				std::string str = "Player " + to_string(turn) + " turn.";
+				displayManager->printHere(winSizeX / 2, winSizeY - 1, str.c_str());
+				refresh();
+			}
+		}
+	}
+
+	bool placeBoats() {
 		bool isPlacingBoat = true;
 		int currentBoat = 0;
 		if (turn == TURN_P1) {
@@ -75,9 +154,8 @@ private:
 			switch (input) {
 				case CTRLC: // Ctrl + c
 				case ESCAPE: // Escape
-					closeGame();
 					isPlacingBoat = false;
-					break;
+					return (false);
 				case DOWN: // DOWN
 					if (turn == TURN_P1)
 						map1->changeCursorPos(0, 1);
@@ -134,8 +212,13 @@ private:
 			}
 		}
 		switchPlayerTurn();
-		if (turn == TURN_P2)
-			placeBoats();
+		if (turn == TURN_P2) {
+			if (placeBoats()) {
+				return (true);
+			} else {
+				return (false);
+			}
+		}
 	}
 
 	void switchPlayerTurn() {
@@ -167,7 +250,6 @@ private:
 		delete (map2);
 		delete (displayManager);
 		playing = false;
-		exit(1);
 	}
 };
 
