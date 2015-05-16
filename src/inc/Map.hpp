@@ -13,12 +13,14 @@ private:
 	Rect cursor = Rect(0, 0, 0, 0);
 
 public:
-	const int MAP_SIZE = 3;
+	const int MAP_SIZE = 9;
 	const int X_MODIFIER = 8;
 	const int Y_MODIFIER = 5;
 	const int MAP_WATER = 0;
 	const int MAP_BOAT = 1;
 	const int MAP_FIRED = 2;
+	static const int BOATS_TEMPLATE[];
+	static const int NB_BOATS = 5;
 
 	// Constructors
 	Map(int p) {
@@ -58,9 +60,7 @@ private:
 		while (x < (MAP_SIZE + 1) * X_MODIFIER + 1) {
 			y = 0;
 			while (y < (MAP_SIZE + 1) * Y_MODIFIER + 1) {
-				if (x % X_MODIFIER == 0) {
-					dm->printHere(x+xfrom, y+yfrom, ACS_CKBOARD);
-				} else if (y % Y_MODIFIER == 0) {
+				if (x % X_MODIFIER == 0 || y % Y_MODIFIER == 0) {
 					dm->printHere(x+xfrom, y+yfrom, ACS_CKBOARD);
 				}
 				y++;
@@ -72,15 +72,22 @@ private:
 	void printIndicator(DisplayManager *dm) {
 		int x = 1;
 		int y = 0;
+		int posx, posy, indic;
 
 		while (x <= MAP_SIZE) {
-			dm->printHere(x*X_MODIFIER + xfrom + X_MODIFIER/2, y*Y_MODIFIER + yfrom + Y_MODIFIER/2, '1' + x-1);
+			posx = x*X_MODIFIER + xfrom + X_MODIFIER/2;
+			posy = y*Y_MODIFIER + yfrom + Y_MODIFIER/2;
+			indic = '1' + x-1;
+			dm->printHere(posx, posy, indic, DisplayManager::BLACK);
 			x++;
 		}
 		x = 0;
 		y = 1;
 		while (y <= MAP_SIZE) {
-			dm->printHere(x*X_MODIFIER + xfrom + X_MODIFIER/2, y*Y_MODIFIER + yfrom + Y_MODIFIER/2, 'A' + y-1);
+			posx = x*X_MODIFIER + xfrom + X_MODIFIER/2;
+			posy = y*Y_MODIFIER + yfrom + Y_MODIFIER/2;
+			indic = 'A' + y-1;
+			dm->printHere(posx, posy, indic, DisplayManager::BLACK);
 			y++;
 		}
 	}
@@ -92,7 +99,7 @@ private:
 			y = 0;
 			while (y < MAP_SIZE) {
 				if (map[x][y] == MAP_BOAT) {
-					printCase(dm, x, y, DisplayManager::GREEN);
+					printCase(dm, x, y, DisplayManager::BLACK);
 				} else if (map[x][y] == MAP_FIRED) {
 					printCase(dm, x, y, DisplayManager::RED);
 				} else {
@@ -107,9 +114,9 @@ private:
 	void printCase(DisplayManager *dm, int x, int y, int color) {
 		x = x * X_MODIFIER + xfrom + 1 + X_MODIFIER;
 		y = y * Y_MODIFIER + yfrom + 1 + Y_MODIFIER;
-		for (int i = 0 ; i < cursor.h * Y_MODIFIER ; i++) {
-			for (int j = 0 ; j < cursor.w * X_MODIFIER ; j++) {
-				dm->printHere(x, y, ACS_CKBOARD, color);
+		for (int i = 0 ; i < Y_MODIFIER ; i++) {
+			for (int j = 0 ; j < X_MODIFIER ; j++) {
+				dm->printHere(x + j, y + i, ACS_CKBOARD, color);
 			}
 		}
 	}
@@ -143,11 +150,27 @@ private:
 	}
 
 public:
+
+	bool addBoat() {
+		for (int y = 0; y < cursor.h ; y++) {
+			for (int x = 0; x < cursor.w ; x++) {
+				if (map[cursor.x + x - 1][cursor.y + y - 1] == MAP_BOAT)
+					return false;
+			}
+		}
+		for (int y = 0; y < cursor.h ; y++) {
+			for (int x = 0; x < cursor.w ; x++) {
+				map[cursor.x + x - 1][cursor.y + y - 1] = MAP_BOAT;
+			}
+		}
+		return true;
+	}
+
 	void printMap(DisplayManager *dm) {
+		printContent(dm);
 		printCursor(dm);
 		printGrid(dm);
 		printIndicator(dm);
-		printContent(dm);
 	}
 
 	void changeCursorPos(int xmodifier, int ymodifier) {
@@ -158,10 +181,10 @@ public:
 	}
 
 	void changeCursor(Rect r) {
-		cursor.x += r.x;
-		cursor.y += r.y;
-		cursor.w += r.w;
-		cursor.h += r.h;
+		cursor.x = r.x;
+		cursor.y = r.y;
+		cursor.w = r.w;
+		cursor.h = r.h;
 	}
 
 	void swapCursor(){
@@ -172,5 +195,7 @@ public:
 		}
 	}
 };
+
+const int Map::BOATS_TEMPLATE[] = {5, 4, 3, 3, 2};
 
 #endif
