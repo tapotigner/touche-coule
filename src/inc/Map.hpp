@@ -3,6 +3,7 @@
 
 #include "DisplayManager.hpp"
 #include "Rect.hpp"
+#include "Game.h"
 
 class Map {
 private:
@@ -19,8 +20,10 @@ public:
 	const int MAP_WATER = 0;
 	const int MAP_BOAT = 1;
 	const int MAP_FIRED = 2;
+	const int MAP_DESTROYED = 2;
 	static const int BOATS_TEMPLATE[];
-	static const int NB_BOATS = 5;
+	//static const int NB_BOATS = 5;
+	static const int NB_BOATS = 1;
 
 	// Constructors
 	Map(int p) {
@@ -92,18 +95,23 @@ private:
 		}
 	}
 
-	void printContent(DisplayManager *dm) {
+	void printContent(DisplayManager *dm, int turn) {
 		int x = 0;
 		int y = 0;
 		while (x < MAP_SIZE) {
 			y = 0;
 			while (y < MAP_SIZE) {
 				if (map[x][y] == MAP_BOAT) {
-					printCase(dm, x, y, DisplayManager::BLACK);
-				} else if (map[x][y] == MAP_FIRED) {
+					if (turn == player)
+						printCase(dm, x, y, DisplayManager::BLACK);
+					else
+						printCase(dm, x, y, DisplayManager::CYAN);
+				} else if (map[x][y] == MAP_DESTROYED) {
 					printCase(dm, x, y, DisplayManager::RED);
-				} else {
+				} else if (map[x][y] == MAP_FIRED) {
 					printCase(dm, x, y, DisplayManager::BLUE);
+				} else if (map[x][y] == MAP_WATER) {
+					printCase(dm, x, y, DisplayManager::CYAN);
 				}
 				y++;
 			}
@@ -149,7 +157,44 @@ private:
 		return true;
 	}
 
+	bool isThereBoats() {
+		int x = 0;
+		int y = 0;
+		while (x < MAP_SIZE) {
+			y = 0;
+			while (y < MAP_SIZE) {
+				if (map[x][y] == MAP_BOAT) {
+					return true;
+				}
+				y++;
+			}
+			x++;
+		}
+		return false;
+	}
+
 public:
+
+	int fire() {
+		int x = cursor.x - 1;
+		int y = cursor.y - 1;
+		if (map[x][y] == MAP_FIRED
+			|| map[x][y] == MAP_DESTROYED) {
+			return ACTION_FAIL;
+		} else {
+			if (map[x][y] == MAP_WATER) {
+				map[x][y] = MAP_FIRED;
+			}
+			if (map[x][y] == MAP_BOAT) {
+				map[x][y] = MAP_DESTROYED;
+			}
+			if (isThereBoats()) {
+				return CONTINUE;
+			} else {
+				return END_OF_GAME;
+			}
+		}
+	}
 
 	bool addBoat() {
 		for (int y = 0; y < cursor.h ; y++) {
@@ -166,8 +211,8 @@ public:
 		return true;
 	}
 
-	void printMap(DisplayManager *dm) {
-		printContent(dm);
+	void printMap(DisplayManager *dm, int turn) {
+		printContent(dm, turn);
 		printCursor(dm);
 		printGrid(dm);
 		printIndicator(dm);
@@ -194,8 +239,13 @@ public:
 			cursor.h = tmp;
 		}
 	}
+
+	Rect getCursor() {
+		return cursor;
+	}
 };
 
-const int Map::BOATS_TEMPLATE[] = {5, 4, 3, 3, 2};
+//const int Map::BOATS_TEMPLATE[] = {5, 4, 3, 3, 2};
+const int Map::BOATS_TEMPLATE[] = {2};
 
 #endif
