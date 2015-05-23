@@ -9,6 +9,7 @@ public:
 	int h;
 
 	Rect(int a, int b, int c, int d) : x(a), y(b), w(c), h(d) {}
+	Rect() {}
 	~Rect() {}
 	
 };
