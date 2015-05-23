@@ -16,6 +16,7 @@ public:
 	void init() {
 		isPlacingBoat = true;
 		currentBoat = 0;
+		message = "Player " + to_string(turn) + ": place your boat. ";
 		if (turn == TURN_P1) {
 			map1->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
 			map2->changeCursor(Rect(0, 0, 0, 0));
@@ -24,8 +25,7 @@ public:
 			map1->changeCursor(Rect(0, 0, 0, 0));
 			map2->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
 		}
-		erase();
-		printMaps();
+		printGame();
 		refresh();
 	}
 
@@ -43,6 +43,7 @@ public:
 			int input = getch();
 			bool isExiting = manageInput(input);
 			if (!isExiting) return false;
+			message = "Player " + to_string(turn) + ": place your boat. ";
 			printGame();
 		}
 		switchPlayerTurn();
@@ -66,8 +67,7 @@ private:
 		if (playing) {
 			// Print the game
 			printMaps();
-			std::string str = "Player " + to_string(turn) + ": place your boat. ";
-			displayManager->printHere(winSize.x / 2, winSize.y - 1, str.c_str());
+			printMessage();
 			refresh();
 		}
 	}
@@ -116,12 +116,12 @@ private:
 
 	void handleEnter() {
 		if (turn == TURN_P1) {
-			if (map1->addBoat()) {
+			if (map1->addBoat(displayManager, currentBoat * turn)) {
 				currentBoat++;
 				map1->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
 			}
 		} else if (turn == TURN_P2) {
-			if (map2->addBoat()) {
+			if (map2->addBoat(displayManager, currentBoat * turn)) {
 				currentBoat++;
 				map2->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
 			}

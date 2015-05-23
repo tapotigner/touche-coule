@@ -24,8 +24,8 @@ public:
 	// Constructors
 	GameManager(int x, int y) {
 		displayManager = new DisplayManager();
-		map1 = new Map(TURN_P1);
-		map2 = new Map(TURN_P2);
+		map1 = new Map(TURN_P1, displayManager);
+		map2 = new Map(TURN_P2, displayManager);
 		playing = true;
 		winSize = Rect(0, 0, 0, 0);
 		winSize.x = x;

@@ -7,8 +7,9 @@
 class DisplayManager {
 private:
 public:
-	enum Color { WHITE = 1, RED = 2, GREEN = 3, BLUE = 4, BLACK = 8, CYAN = 7};
-	enum Color2 { SPLASH_SCREEN_TEXT = 8, SPLASH_SCREEN_BORDER = 9 };
+	
+	enum Color { SPLASH_SCREEN_TEXT = 9, SPLASH_SCREEN_BORDER = 10, INDIC = 11, GRID_COLOR = 12, WATER_COLOR = 13, BOAT_COLOR = 14,
+					FIRED_COLOR = 15, DESTROYED_COLOR = 16, CURSOR_COLOR = 1};
 	enum Style { NORMAL = A_NORMAL, BLINK = A_BLINK, BOLD = A_BOLD};	
 
 	// Constructors
@@ -52,18 +53,27 @@ public:
 		attron(COLOR_PAIR(1));
 	}
 
+	void printHere(int x, int y, const char *str, int color, int style) {
+		x -= strlen(str) / 2;
+		attron(COLOR_PAIR(color));
+		attron(style);
+		move(y, x);
+		addstr(str);
+		attroff(COLOR_PAIR(color));
+		attroff(style);
+	}
+
 private:
 	void initColor() {
-		init_pair(1, COLOR_BLACK, COLOR_WHITE);
-    	init_pair(2, COLOR_BLACK, COLOR_RED);
-    	init_pair(3, COLOR_BLACK, COLOR_GREEN);
-    	init_pair(4, COLOR_BLACK, COLOR_BLUE);
-    	init_pair(8, COLOR_WHITE, COLOR_BLACK);
-    	init_pair(5, COLOR_BLACK, COLOR_YELLOW);
-    	init_pair(6, COLOR_BLACK, COLOR_MAGENTA);
-    	init_pair(7, COLOR_BLACK, COLOR_CYAN);
-    	init_pair(8, COLOR_MAGENTA, COLOR_WHITE);
-    	init_pair(9, COLOR_RED, COLOR_RED);
+		init_pair(CURSOR_COLOR, COLOR_BLACK, COLOR_GREEN);
+    	init_pair(SPLASH_SCREEN_TEXT, COLOR_MAGENTA, COLOR_WHITE);
+    	init_pair(SPLASH_SCREEN_BORDER, COLOR_RED, COLOR_RED);
+    	init_pair(INDIC, COLOR_WHITE, COLOR_BLACK);
+    	init_pair(GRID_COLOR, COLOR_BLACK, COLOR_BLACK);
+    	init_pair(WATER_COLOR, COLOR_BLACK, COLOR_CYAN);
+    	init_pair(BOAT_COLOR, COLOR_BLACK, COLOR_WHITE);
+    	init_pair(DESTROYED_COLOR, COLOR_BLACK, COLOR_RED);
+    	init_pair(FIRED_COLOR, COLOR_BLACK, COLOR_BLUE);
 	}
 // COLOR_BLACK   0
 // COLOR_RED     1

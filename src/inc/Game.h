@@ -2,8 +2,15 @@
 #define __GAME_H__
 
 // CONF
-static const int BOATS_TEMPLATE[] = {2, 3};
-static const int NB_BOATS = 2;
+static const int BOATS_TEMPLATE[] = {5, 2, 4};
+static const int NB_BOATS = 3;
+static const int MAP_SIZE = 9;
+static const int X_MODIFIER = 8;
+static const int Y_MODIFIER = 5;
+static const int MAP_WATER = 0;
+static const int MAP_BOAT = 1;
+static const int MAP_FIRED = 2;
+static const int MAP_DESTROYED = 3;
 
 // VARS
 static const int TURN_P1 = 1;

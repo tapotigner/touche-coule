@@ -9,6 +9,7 @@ public:
 	Map *map1;
 	Map *map2;
 	bool playing;
+	std::string message;
 
 	GameProcess(DisplayManager *dm, Map *m1, Map *m2, bool p, Rect ws) : Process(dm, ws) {
 		map1 = m1;
@@ -36,6 +37,10 @@ public:
 		erase();
 		map1->printMap(displayManager, turn);
 		map2->printMap(displayManager, turn);
+	}
+
+	void printMessage() {
+		displayManager->printHere(winSize.x / 2, winSize.y - 1, message.c_str());
 	}
 };
 
