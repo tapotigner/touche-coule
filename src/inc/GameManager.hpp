@@ -38,13 +38,9 @@ public:
 
 	void run() {
 		splashScreen();
-		while (playing) {
-			if (placeBoats()) {
-				if (fight())
-					getch();
-			}
-			closeGame();
-		}
+		if (playing) placeBoats();
+		if (playing) fight();
+		closeGame();
 	}
 
 private:
@@ -59,14 +55,14 @@ private:
 	bool fight() {
 		FightProcess fp = FightProcess(displayManager, map1, map2, playing, winSize);
 		fp.init();
-		fp.run();
+		playing = fp.run();
 		fp.end();
 	}
 
 	bool placeBoats() {
 		PlaceBoatProcess pbp = PlaceBoatProcess(displayManager, map1, map2, playing, winSize);
 		pbp.init();
-		pbp.run();
+		playing = pbp.run();
 		pbp.end();
 	}
 

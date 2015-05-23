@@ -6,9 +6,9 @@
 
 class DisplayManager {
 private:
-
 public:
-	enum Color { WHITE = 1, RED = 2, GREEN = 3, BLUE = 4, BLACK = 8, CYAN = 7};	
+	enum Color { WHITE = 1, RED = 2, GREEN = 3, BLUE = 4, BLACK = 8, CYAN = 7};
+	enum Color2 { SPLASH_SCREEN_TEXT = 8, SPLASH_SCREEN_BORDER = 9 };
 	enum Style { NORMAL = A_NORMAL, BLINK = A_BLINK, BOLD = A_BOLD};	
 
 	// Constructors
@@ -62,6 +62,8 @@ private:
     	init_pair(5, COLOR_BLACK, COLOR_YELLOW);
     	init_pair(6, COLOR_BLACK, COLOR_MAGENTA);
     	init_pair(7, COLOR_BLACK, COLOR_CYAN);
+    	init_pair(8, COLOR_MAGENTA, COLOR_WHITE);
+    	init_pair(9, COLOR_RED, COLOR_RED);
 	}
 // COLOR_BLACK   0
 // COLOR_RED     1

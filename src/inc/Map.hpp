@@ -20,11 +20,8 @@ public:
 	const int MAP_WATER = 0;
 	const int MAP_BOAT = 1;
 	const int MAP_FIRED = 2;
-	const int MAP_DESTROYED = 2;
-	static const int BOATS_TEMPLATE[];
-	//static const int NB_BOATS = 5;
-	static const int NB_BOATS = 1;
-
+	const int MAP_DESTROYED = 3;
+	
 	// Constructors
 	Map(int p) {
 		player = p;
@@ -176,6 +173,7 @@ private:
 public:
 
 	int fire() {
+		bool hit = false;
 		int x = cursor.x - 1;
 		int y = cursor.y - 1;
 		if (map[x][y] == MAP_FIRED
@@ -184,12 +182,15 @@ public:
 		} else {
 			if (map[x][y] == MAP_WATER) {
 				map[x][y] = MAP_FIRED;
-			}
-			if (map[x][y] == MAP_BOAT) {
+			} else if (map[x][y] == MAP_BOAT) {
 				map[x][y] = MAP_DESTROYED;
+				hit = true;
 			}
 			if (isThereBoats()) {
-				return CONTINUE;
+				if (hit)
+					return ACTION_HIT;
+				else
+					return CONTINUE;
 			} else {
 				return END_OF_GAME;
 			}
@@ -244,8 +245,5 @@ public:
 		return cursor;
 	}
 };
-
-//const int Map::BOATS_TEMPLATE[] = {5, 4, 3, 3, 2};
-const int Map::BOATS_TEMPLATE[] = {2};
-
+	
 #endif
