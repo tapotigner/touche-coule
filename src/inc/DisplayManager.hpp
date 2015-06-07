@@ -21,6 +21,7 @@ public:
 	 	noecho();					/* Don't echo() while we do getch */
 	 	start_color();				/* Colors */
 	 	initColor();				/* Init color pairs */
+  		nodelay(stdscr,TRUE);		/* No bloquant getch() */
 	}
 
 	~DisplayManager() {
