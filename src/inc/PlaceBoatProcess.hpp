@@ -10,7 +10,9 @@ private:
 	int currentBoat;
 
 public:
-	PlaceBoatProcess(DisplayManager *dm, Map *m1, Map *m2, bool p, Rect ws) : GameProcess(dm, m1, m2, p, ws) {}
+	PlaceBoatProcess(DisplayManager *dm, Map *m1, Map *m2, bool p, Rect ws, bool mt) : GameProcess(dm, m1, m2, p, ws, mt) {
+		turn = turn;
+	}
 	~PlaceBoatProcess() {}
 
 	void init() {
@@ -28,7 +30,7 @@ public:
 		printGame();
 		refresh();
 	}
-
+/*
 	bool run() {
 		if (turn == TURN_P1) {
 			map1->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
@@ -39,7 +41,6 @@ public:
 			map2->changeCursor(Rect(1, 1, BOATS_TEMPLATE[currentBoat], 1));
 		}
 		while (isPlacingBoat) {
-			// Get inputs
 			int input = getch();
 			bool isExiting = manageInput(input);
 			if (!isExiting) return false;
@@ -56,6 +57,7 @@ public:
 			}
 		}
 	}
+*/
 
 	void end() {
 		
@@ -65,13 +67,12 @@ private:
 
 	void printGame() {
 		if (playing) {
-			// Print the game
 			printMaps();
 			printMessage();
 			refresh();
 		}
 	}
-
+/*
 	bool manageInput(int input) {
 		switch (input) {
 			case CTRLC: // Ctrl + c
@@ -99,7 +100,7 @@ private:
 		}
 		return true;
 	}
-
+*/
 	void handleArrows(int x, int y) {
 		if (turn == TURN_P1)
 			map1->changeCursorPos(x, y);

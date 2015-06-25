@@ -21,6 +21,8 @@ public:
 	virtual void init() = 0;
 	virtual bool run() = 0;
 	virtual void end() = 0;
+
+	
 };
 
 

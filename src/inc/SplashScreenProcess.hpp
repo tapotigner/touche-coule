@@ -36,7 +36,8 @@ public:
 		displayManager->printHere(winSize.x / 2, winSize.y / 2 + 4, str0.c_str(), DisplayManager::SPLASH_SCREEN_TEXT);
 		displayManager->printHere(winSize.x / 2, winSize.y / 2 + 5, str0.c_str(), DisplayManager::SPLASH_SCREEN_BORDER);
 		refresh();
-		getch();
+		sleep(2);
+		erase();
 	}
 
 // " __    __     _                            _                                    _           _   _   _      "

@@ -5,13 +5,14 @@
 
 class GameProcess : public Process {
 public:
-	int turn;
+	bool myTurn;
+	NetworkManager *networkManager;
 	Map *map1;
 	Map *map2;
 	bool playing;
 	std::string message;
 
-	GameProcess(DisplayManager *dm, Map *m1, Map *m2, bool p, Rect ws) : Process(dm, ws) {
+	GameProcess(DisplayManager *dm, Map *m1, Map *m2, bool p, Rect ws, bool mt) : Process(dm, ws) {
 		map1 = m1;
 		map2 = m2;
 		playing = p;
@@ -20,7 +21,14 @@ public:
 
 	~GameProcess() {}
 	virtual void init() = 0;
-	virtual bool run() = 0;
+	virtual bool run() {
+		while (isProcessing) {
+			int input = getch();
+			char *netInput = networkManager->myRead();
+			manageInput(input, netInput);
+			printGame();
+		}
+	}
 	virtual void end() = 0;
 	
 	void switchPlayerTurn() {
